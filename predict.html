@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NIFTY 50 Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="container">
+        <h2>NIFTY 50 Index Prediction</h2>
+        <p>Welcome, {{ session['username'] }}! <a href="{{ url_for('logout') }}">Logout</a></p>
+
+        <h3>Upload Historical Data (CSV)</h3>
+        <form method="post" enctype="multipart/form-data">
+            <label for="file">Upload CSV file:</label>
+            <input type="file" id="file" name="file" accept=".csv" />
+            <button type="submit">Predict</button>
+        </form>
+
+        <h3>Or Enter Closing Prices Manually (comma separated)</h3>
+        <form method="post">
+            <textarea name="prices" rows="4" cols="50" placeholder="e.g. 15000, 15050, 15100, 15080"></textarea><br />
+            <button type="submit">Predict</button>
+        </form>
+
+        <h3>Or Use Live NIFTY 50 Data</h3>
+        <form action="{{ url_for('predict_live') }}" method="get">
+            <button type="submit">Predict Using Live Data</button>
+        </form>
+
+        {% if error %}
+            <div class="error">{{ error }}</div>
+        {% endif %}
+
+        {% if prediction %}
+            <h3>Prediction Result</h3>
+            <p>Next Day NIFTY 50 Index Prediction: <strong>{{ prediction }}</strong></p>
+            <p>Model Accuracy: <strong>{{ accuracy }}%</strong></p>
+            <h3>Recent Trends and Prediction Graph</h3>
+            <img src="data:image/png;base64,{{ graph_url }}" alt="Prediction Graph" />
+        {% endif %}
+    </div>
+</body>
+</html>
